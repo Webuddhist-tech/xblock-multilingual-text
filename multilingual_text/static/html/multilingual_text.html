@@ -1,5 +1,33 @@
-<div class="multilingual_text_block">
-<p>MultilingualTextXBlock: count is now
-    <span class='count'>{self.count}</span> (click me to increment).
-</p>
+{% load i18n %}
+<div
+  id="{{ element_id }}"
+  class="multilingual-text"
+  data-course-id="{{ course_id }}"
+>
+  {% if translations %}
+    <div class="multilingual-text__control">
+      <label for="{{ element_id }}-language">{% trans "Language" %}</label>
+      <select id="{{ element_id }}-language" class="multilingual-text__select">
+        {% for translation in translations %}
+          <option value="{{ translation.code }}">{{ translation.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="multilingual-text__contents">
+      {% for translation in translations %}
+        <div
+          class="multilingual-text__content"
+          data-language="{{ translation.code }}"
+          lang="{{ translation.code }}"
+          dir="auto"
+          {% if not forloop.first %}hidden{% endif %}
+        >{{ translation.content|safe }}</div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="multilingual-text__unavailable" role="status">
+      {% trans "This content is not available in any language." %}
+    </p>
+  {% endif %}
 </div>

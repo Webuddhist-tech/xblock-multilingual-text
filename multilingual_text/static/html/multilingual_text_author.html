@@ -1,0 +1,48 @@
+{% load i18n %}
+<section class="multilingual-text-author" aria-labelledby="multilingual-text-author-heading">
+
+  {% if catalog_errors %}
+    <div class="multilingual-text-author__message multilingual-text-author__message--error" role="alert">
+      <p><strong>{% trans "The course language catalog is invalid." %}</strong></p>
+      <ul>
+        {% for error in catalog_errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p>
+      {% blocktrans count count=catalog|length %}The course catalog contains {{ count }} language.{% plural %}The course catalog contains {{ count }} languages.{% endblocktrans %}
+    </p>
+
+    {% if status.active %}
+      <p><strong>{% trans "Active:" %}</strong>
+        {% for language in status.active %}{{ language.label }}{% if language.code != language.label %} [{{ language.code }}]{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </p>
+    {% endif %}
+    {% if status.missing %}
+      <p><strong>{% trans "Missing Text blocks:" %}</strong>
+        {% for language in status.missing %}{{ language.label }}{% if language.code != language.label %} [{{ language.code }}]{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </p>
+    {% endif %}
+    {% if status.inactive %}
+      <p><strong>{% trans "Inactive but preserved:" %}</strong>
+        {% for code in status.inactive %}{{ code }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </p>
+    {% endif %}
+    {% if status.stale %}
+      <p><strong>{% trans "Deleted child references to clean up:" %}</strong>
+        {% for code in status.stale %}{{ code }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </p>
+    {% endif %}
+
+    <button
+      type="button"
+      class="multilingual-text-author__sync button"
+      data-sync-translations
+      data-syncing-message="{% trans 'Synchronizing components…' %}"
+      data-error-message="{% trans 'Component synchronization failed.' %}"
+    >
+      {% if status.missing %}{% trans "Create missing components" %}{% else %}{% trans "Refresh components" %}{% endif %}
+    </button>
+    <p class="multilingual-text-author__result" data-sync-result aria-live="polite"></p>
+  {% endif %}
+</section>

@@ -8,7 +8,6 @@
 REPO_NAME := xblock-multilingual-text
 PACKAGE_NAME := multilingual_text
 EXTRACT_DIR := $(PACKAGE_NAME)/conf/locale/en/LC_MESSAGES
-JS_TARGET := $(PACKAGE_NAME)/public/js/translations
 
 help:
 	@perl -nle'print $& if m{^[\.a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
@@ -68,12 +67,11 @@ dev.exec: ## Execute to the dev container
 ## Localization targets
 
 extract_translations: ## extract strings to be translated, outputting .po files
-	cd $(PACKAGE_NAME) && i18n_tool extract --no-segment --merge-po-files
+	cd $(PACKAGE_NAME) && i18n_tool extract --no-segment
 	mv $(EXTRACT_DIR)/django.po $(EXTRACT_DIR)/text.po
 
 compile_translations: ## compile translation files, outputting .mo files for each supported language
 	cd $(PACKAGE_NAME) && i18n_tool generate
-	python manage.py compilejsi18n --namespace MultilingualTextI18n --output $(JS_TARGET)
 
 detect_changed_source_translations:
 	cd $(PACKAGE_NAME) && i18n_tool changed

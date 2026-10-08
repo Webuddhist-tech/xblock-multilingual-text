@@ -12,8 +12,7 @@ RUN apt-get update && \
     apt-get install -y gettext
 
 # Prepare the install_and_run_xblock script by appending necessary commands
-RUN echo "pip install -r /usr/local/src/xblock-multilingual-text/requirements.txt" >> /usr/local/src/xblock-sdk/install_and_run_xblock.sh && \
-    echo "pip install -e /usr/local/src/xblock-multilingual-text" >> /usr/local/src/xblock-sdk/install_and_run_xblock.sh && \
+RUN echo "pip install -e /usr/local/src/xblock-multilingual-text" >> /usr/local/src/xblock-sdk/install_and_run_xblock.sh && \
     echo "cd /usr/local/src/xblock-multilingual-text && make compile_translations && cd /usr/local/src/xblock-sdk" >> /usr/local/src/xblock-sdk/install_and_run_xblock.sh && \
     echo "exec python /usr/local/src/xblock-sdk/manage.py \"\$@\"" >> /usr/local/src/xblock-sdk/install_and_run_xblock.sh
 

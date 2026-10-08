@@ -14,7 +14,17 @@ Change Log
 Unreleased
 **********
 
-*
+Added
+=====
+
+* Course-configured multilingual Text content using native Open edX Text child blocks.
+* A learner language selector with course-scoped browser persistence.
+* Non-destructive synchronization of course language catalogs in Studio.
+
+Changed
+-------
+
+* Replaced the generated counter example with the production XBlock implementation.
 
 0.1.0 – 2026-10-08
 **********************************************
