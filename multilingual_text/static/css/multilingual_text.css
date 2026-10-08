@@ -1,0 +1,9 @@
+/* CSS for MultilingualTextXBlock */
+
+.multilingual_text_block .count {
+    font-weight: bold;
+}
+
+.multilingual_text_block p {
+    cursor: pointer;
+}
