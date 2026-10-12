@@ -1,153 +1,102 @@
-Multilingual text content XBlock
-################################
+Multilingual Text XBlock
+########################
 
-Testing with Docker
-*******************
+``multilingual_text`` is an Open edX container XBlock that presents the same
+Text content in multiple languages. Each translation is a native Open edX Text
+(``html``) child, so course authors keep the standard rich-text editor, source
+editor, links, tables, images, and course asset workflow.
 
-This XBlock comes with a Docker test environment ready to build, based on the xblock-sdk workbench.
-To build and run it:
+Learners choose a language from a dropdown above the content. Their choice is
+remembered in the browser for the current course and is shared by other
+Multilingual Text blocks on the same page.
+
+Platform setup
+**************
+
+Install this package in both the LMS and CMS Open edX images. For a published
+package or Git repository, add it to Tutor's
+``OPENEDX_EXTRA_PIP_REQUIREMENTS`` and rebuild the Open edX image.
+
+Studio must expose the **Other Course Settings** field. Enable it with a small
+Tutor plugin containing this patch:
+
+.. code-block:: python
+
+    from tutor import hooks
+
+    hooks.Filters.ENV_PATCHES.add_item((
+        "openedx-cms-common-settings",
+        "ENABLE_OTHER_COURSE_SETTINGS = True",
+    ))
+
+Run ``tutor config save`` and restart or rebuild the platform after enabling
+the plugin. This is a one-time platform change; editing course languages later
+does not require a deployment.
+
+Course setup
+************
+
+In **Studio > Settings > Advanced Settings**:
+
+1. Add ``multilingual_text`` to **Advanced Module List**.
+2. Set **Other Course Settings** to an object containing an ordered language
+   catalog:
+
+   .. code-block:: json
+
+       {
+         "multilingual_text_languages": ["English", "Tibetan", "Hindi"]
+       }
+
+   Native script names can also be used directly:
+
+   .. code-block:: json
+
+       {
+         "multilingual_text_languages": ["English", "བོད་ཡིག", "हिन्दी"]
+       }
+
+Language names can be any custom Unicode text without needing ISO language codes or mappings. Catalog order controls the initial default language presented to the learner.
+
+Authoring translations
+**********************
+
+1. Add **Multilingual Text** from Advanced Components.
+2. Select **View** to open its container page.
+3. Select **Create missing components**.
+4. Edit each generated Text child with the normal Open edX Text editor.
+5. Publish the changed course content.
+
+Only languages with non-empty content appear to learners. Removing a language
+from the course catalog hides it from learners but preserves its Text child and
+content. Re-adding the same code restores it. Use **Refresh components**
+after changing labels or adding languages.
+
+Development and testing
+***********************
+
+Install the development requirements and run the complete test suite:
+
+.. code-block:: bash
+
+    make requirements
+    tox
+
+The XBlock SDK Workbench can render the package shell, but it does not provide
+Open edX's course settings or mutable Studio modulestore. Translation creation
+must therefore be integration-tested in Tutor/Open edX.
+
+To run Workbench in Docker:
 
 .. code-block:: bash
 
     make dev.run
 
-The XBlock SDK Workbench, including this XBlock, will be available on the list of XBlocks at http://localhost:8000
+Workbench is then available at http://localhost:8000.
 
-Translating
-***********
+Scope and limitations
+*********************
 
-Internationalization (i18n) is when a program is made aware of multiple languages.
-Localization (l10n) is adapting a program to local language and cultural habits.
-
-Use the locale directory to provide internationalized strings for your XBlock project.
-For more information on how to enable translations, visit the
-`Enabling Translations on a New Repo <https://docs.openedx.org/en/latest/developers/how-tos/enable-translations-new-repo.html>`_.
-
-This cookiecutter template uses `django-statici18n <https://django-statici18n.readthedocs.io/>`_
-to provide translations to static javascript using ``gettext``.
-
-The included Makefile contains targets for extracting, compiling and validating translatable strings.
-The general steps to provide multilingual messages for a Python program (or an XBlock) are:
-
-1. Mark translatable strings.
-2. Run i18n tools to create raw message catalogs.
-3. Create language specific translations for each message in the catalogs.
-4. Use ``gettext`` to translate strings.
-
-1. Mark translatable strings
-============================
-
-Mark translatable strings in python:
-
-.. code-block:: python
-
-    from django.utils.translation import ugettext as _
-
-    # Translators: This comment will appear in the `.po` file.
-    message = _("This will be marked.")
-
-See `edx-developer-guide <https://docs.openedx.org/en/latest/developers/references/developer_guide/internationalization/i18n.html#python-source-code>`__
-for more information.
-
-You can also use ``gettext`` to mark strings in javascript:
-
-.. code-block:: javascript
-
-    // Translators: This comment will appear in the `.po` file.
-    var message = gettext("Custom message.");
-
-See `edx-developer-guide <https://docs.openedx.org/en/latest/developers/references/developer_guide/internationalization/i18n.html#javascript-files>`__
-for more information.
-
-2. Run i18n tools to create Raw message catalogs
-================================================
-
-This cookiecutter template offers multiple make targets which are shortcuts to
-use `edx-i18n-tools <https://github.com/openedx/i18n-tools>`_.
-
-After marking strings as translatable we have to create the raw message catalogs.
-These catalogs are created in ``.po`` files. For more information see
-`GNU PO file documentation <https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html>`_.
-These catalogs can be created by running:
-
-.. code-block:: bash
-
-    make extract_translations
-
-The previous command will create the necessary ``.po`` files under
-``xblock-multilingual-text/multilingual_text/conf/locale/en/LC_MESSAGES/text.po``.
-The ``text.po`` file is created from the ``django-partial.po`` file created by
-``django-admin makemessages`` (`makemessages documentation <https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#message-files>`_),
-this is why you will not see a ``django-partial.po`` file.
-
-3. Create language specific translations
-========================================
-
-3.1 Add translated strings
---------------------------
-
-After creating the raw message catalogs, all translations should be filled out by the translator.
-One or more translators must edit the entries created in the message catalog, i.e. the ``.po`` file(s).
-The format of each entry is as follows::
-
-    #  translator-comments
-    A. extracted-comments
-    #: reference…
-    #, flag…
-    #| msgid previous-untranslated-string
-    msgid 'untranslated message'
-    msgstr 'mensaje traducido (translated message)'
-
-For more information see
-`GNU PO file documentation <https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html>`_.
-
-To use translations from transifex use the follow Make target to pull translations::
-
-    $ make pull_translations
-
-See `config instructions <https://github.com/openedx/i18n-tools#transifex-commands>`_ for information on how to set up your
-transifex credentials.
-
-See `Enabling Translations on a New Repo <https://docs.openedx.org/en/latest/developers/how-tos/enable-translations-new-repo.html>`_
-for more details about integrating django with transifex.
-
-3.2 Compile translations
-------------------------
-
-Once translations are in place, use the following Make target to compile the translation catalogs ``.po`` into
-``.mo`` message files:
-
-.. code-block:: bash
-
-    make compile_translations
-
-The previous command will compile ``.po`` files using
-``django-admin compilemessages`` (`compilemessages documentation <https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#compiling-message-files>`_).
-After compiling the ``.po`` file(s), ``django-statici18n`` is used to create language specific catalogs. See
-``django-statici18n`` `documentation <https://django-statici18n.readthedocs.io/en/latest/>`_ for more information.
-
- **Note:** The ``dev.run`` make target will automatically compile any translations.
-
- **Note:** To check if the source translation files (``.po``) are up-to-date run:
-
-.. code-block:: bash
-
-    make detect_changed_source_translations
-
-4. Use ``gettext`` to translate strings
-=======================================
-
-Django will automatically use ``gettext`` and the compiled translations to translate strings.
-
-Troubleshooting
-***************
-
-If there are any errors compiling ``.po`` files run the following command to validate your ``.po`` files:
-
-.. code-block:: bash
-
-    make validate
-
-See `django's i18n troubleshooting documentation
-<https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs>`_
-for more information.
+Version 1 supports responsive LMS web pages. It does not provide machine
+translation, grading, account-level preference synchronization, a dedicated
+language settings page, Content Library authoring, or native mobile app UI.
