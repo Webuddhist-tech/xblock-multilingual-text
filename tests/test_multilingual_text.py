@@ -1,12 +1,14 @@
 """Tests for the Multilingual Text XBlock."""
 
+import json
 from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import ScopeIds
+from xblock.fields import ReferenceValueDict, ScopeIds
 from xblock.test.toy_runtime import ToyRuntime
 
 from multilingual_text import MultilingualTextXBlock
@@ -185,6 +187,25 @@ def test_translation_status_preserves_inactive_and_finds_stale_mappings():
     assert status["missing"] == [catalog[1]]
     assert status["inactive"] == ["fr"]
     assert status["stale"] == ["de"]
+
+
+def test_language_block_references_are_serializable_for_olx_export():
+    """Write usage-key references as strings through the standard XBlock XML path."""
+    block = MultilingualTextXBlock(
+        ToyRuntime(),
+        scope_ids=ScopeIds("author", "multilingual_text", "definition", "parent"),
+    )
+    english_key = FakeUsageKey("course-v1:Test+MT+2026", "html", "english")
+    block.language_blocks = {"en": english_key}
+    node = etree.Element("placeholder")
+
+    block.add_xml_to_node(node)
+
+    assert json.loads(node.get("language_blocks")) == {"en": str(english_key)}
+    assert block.fields["language_blocks"].from_string(node.get("language_blocks")) == {
+        "en": str(english_key),
+    }
+    assert isinstance(block.fields["language_blocks"], ReferenceValueDict)
 
 
 def test_sync_creates_missing_renames_existing_and_is_idempotent():

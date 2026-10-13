@@ -2,7 +2,6 @@
 
 import hashlib
 import os
-import re
 from importlib import import_module
 from uuid import uuid4
 
@@ -18,6 +17,16 @@ resource_loader = ResourceLoader(__name__)
 
 CATALOG_SETTING = "multilingual_text_languages"
 USER_ID_ATTRIBUTE = "edx-platform.user_id"
+
+
+class ExportableReferenceValueDict(ReferenceValueDict):
+    """Serialize usage-key values as strings for OLX export."""
+
+    def to_string(self, value):
+        """Return a JSON representation that the XBlock XML exporter can write."""
+        if value is not None:
+            value = {key: str(reference) for key, reference in value.items()}
+        return super().to_string(value)
 
 
 def _platform_modulestore():
@@ -43,7 +52,7 @@ class MultilingualTextXBlock(StudioEditableXBlockMixin, StudioContainerXBlockMix
         default=_("Multilingual Text"),
         scope=Scope.settings,
     )
-    language_blocks = ReferenceValueDict(
+    language_blocks = ExportableReferenceValueDict(
         help=_("Maps configured language codes to their native Text child blocks."),
         scope=Scope.content,
     )
@@ -99,7 +108,9 @@ class MultilingualTextXBlock(StudioEditableXBlockMixin, StudioContainerXBlockMix
                 code = code.strip() if isinstance(code, str) else ""
                 label = label.strip() if isinstance(label, str) else ""
             else:
-                errors.append(_("Language entry %(position)s must be a language name or object.") % {"position": position})
+                errors.append(
+                    _("Language entry %(position)s must be a language name or object.") % {"position": position}
+                )
                 continue
 
             if not label:
