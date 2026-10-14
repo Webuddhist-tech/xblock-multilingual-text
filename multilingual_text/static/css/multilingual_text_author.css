@@ -1,0 +1,22 @@
+/* Studio container view: hide unsupported action items ONLY on child translation blocks of Multilingual Text */
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub a.access-button,
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub a.move-button,
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub a.manage-tags-button,
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub a.copy-button,
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub a.duplicate-button {
+    display: none !important;
+}
+
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub li:has(a.access-button),
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub li:has(a.move-button),
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub li:has(a.manage-tags-button),
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub li:has(a.copy-button),
+section.level-page[data-locator*="type@multilingual_text"] .studio-xblock-wrapper .nav-sub li:has(a.duplicate-button) {
+    display: none !important;
+}
+
+/* Hide legacy unit access button in container header if present */
+section.level-page[data-locator*="type@multilingual_text"] .access-editor-action-wrapper {
+    display: none !important;
+}
+

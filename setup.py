@@ -143,13 +143,12 @@ if sys.argv[-1] == 'tag':
     sys.exit()
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding="utf8").read()
-CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encoding="utf8").read()
 
 setup(
     name='xblock-multilingual-text',
     version=VERSION,
     description="""Multilingual text content XBlock""",
-    long_description=README + '\n\n' + CHANGELOG,
+    long_description=README,
     author='Yogesh Bhagat',
     author_email='yogeshbhagat42code@gmail.com',
     url='https://github.com/Webuddhist-tech/xblock-multilingual-text',
@@ -160,7 +159,7 @@ setup(
 
     include_package_data=True,
     install_requires=load_requirements('requirements/base.in'),
-    python_requires=">=3.12",
+    python_requires=">=3.11",
     license="AGPL 3.0",
     zip_safe=False,
     keywords='Python edx',
@@ -170,6 +169,7 @@ setup(
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
     entry_points={
@@ -177,6 +177,6 @@ setup(
             'multilingual_text = multilingual_text:MultilingualTextXBlock',
         ]
     },
-    package_data=package_data("multilingual_text", ["static", "public"]),
+    package_data=package_data("multilingual_text", ["static", "public", "conf"]),
 
 )

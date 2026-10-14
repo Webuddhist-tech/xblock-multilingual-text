@@ -1,33 +1,64 @@
-/* Javascript for MultilingualTextXBlock. */
-function MultilingualTextXBlock(runtime, element) {
+/* global CustomEvent */
+function MultilingualTextXBlock(runtime, element) { // eslint-disable-line no-unused-vars
+    'use strict';
 
-    function updateCount(result) {
-        $('.count', element).text(result.count);
+    var root = element.querySelector ? element : element[0];
+    var block = root.querySelector('.multilingual-text');
+    if (!block) {
+        return;
     }
 
-    var handlerUrl = runtime.handlerUrl(element, 'increment_count');
+    var select = block.querySelector('.multilingual-text__select');
+    if (!select) {
+        return;
+    }
 
-    $('p', element).click(function(eventObject) {
-        $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify({"hello": "world"}),
-            success: updateCount
-        });
+    var courseId = block.getAttribute('data-course-id');
+    var storageKey = 'multilingual_text:' + courseId + ':language';
+    var eventName = 'multilingual-text:language-change';
+    var panels = Array.prototype.slice.call(block.querySelectorAll('.multilingual-text__content'));
+    var available = panels.map(function (panel) {
+        return panel.getAttribute('data-language');
     });
 
-    $(function ($) {
-        /*
-        Use `gettext` provided by django-statici18n for static translations
+    function storedLanguage() {
+        try {
+            return window.localStorage.getItem(storageKey);
+        } catch (error) {
+            return null;
+        }
+    }
 
-        var gettext = MultilingualTextXBlocki18n.gettext;
-        */
+    function remember(language) {
+        try {
+            window.localStorage.setItem(storageKey, language);
+        } catch (error) {
+            // Browser privacy settings may disable localStorage; switching still works.
+        }
+    }
 
-        /* Here's where you'd do things on page load. */
+    function show(language) {
+        var selected = available.indexOf(language) === -1 ? available[0] : language;
+        select.value = selected;
+        panels.forEach(function (panel) {
+            panel.hidden = panel.getAttribute('data-language') !== selected;
+        });
+        return selected;
+    }
 
-        // dummy_text is to have at least one string to translate in JS files. If you remove this line,
-        // and you don't have any other string to translate in JS files; then you must remove the (--merge-po-files)
-        // option from the "extract_translations" command in the Makefile
-        const dummy_text = gettext("Hello World");
+    show(storedLanguage());
+
+    select.addEventListener('change', function () {
+        var selected = show(select.value);
+        remember(selected);
+        window.dispatchEvent(new CustomEvent(eventName, {
+            detail: {courseId: courseId, language: selected},
+        }));
+    });
+
+    window.addEventListener(eventName, function (event) {
+        if (event.detail && event.detail.courseId === courseId) {
+            show(event.detail.language);
+        }
     });
 }

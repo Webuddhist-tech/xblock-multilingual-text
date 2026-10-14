@@ -1,6 +1,6 @@
-include CHANGELOG.rst
 include LICENSE.txt
 include README.rst
 include requirements/base.in
 include requirements/constraints.txt
 recursive-include multilingual_text *.html *.png *.gif *.js *.css *.jpg *.jpeg *.svg
+recursive-include multilingual_text/conf *.po *.mo *.yaml

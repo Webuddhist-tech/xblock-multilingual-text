@@ -1,9 +1,54 @@
-/* CSS for MultilingualTextXBlock */
-
-.multilingual_text_block .count {
-    font-weight: bold;
+.multilingual-text__control {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin: 1rem 0 1rem -1rem;
+    width: 100%;
 }
 
-.multilingual_text_block p {
-    cursor: pointer;
+.multilingual-text__control label {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.multilingual-text-author strong {
+    font-weight: 600;
+}
+
+.multilingual-text__select {
+    border: 1px solid #c2c7cc;
+    border-radius: 4px;
+    max-width: 100%;
+    min-width: 10rem;
+    padding: 0.35rem 0.65rem;
+}
+
+.multilingual-text__content[hidden] {
+    display: none !important;
+}
+
+.multilingual-text__unavailable,
+.multilingual-text-author__message {
+    border-left: 0.25rem solid #707070;
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+}
+
+.multilingual-text-author {
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.multilingual-text-author__message--error {
+    border-left-color: #b21717;
+}
+
+.multilingual-text-author__sync {
+    margin-top: 0.5rem;
+}
+
+.multilingual-text-author__result {
+    margin: 0.5rem 0 0;
 }
