@@ -143,13 +143,12 @@ if sys.argv[-1] == 'tag':
     sys.exit()
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding="utf8").read()
-CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encoding="utf8").read()
 
 setup(
     name='xblock-multilingual-text',
     version=VERSION,
     description="""Multilingual text content XBlock""",
-    long_description=README + '\n\n' + CHANGELOG,
+    long_description=README,
     author='Yogesh Bhagat',
     author_email='yogeshbhagat42code@gmail.com',
     url='https://github.com/Webuddhist-tech/xblock-multilingual-text',
