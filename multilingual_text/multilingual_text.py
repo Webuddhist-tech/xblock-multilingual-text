@@ -211,6 +211,7 @@ class MultilingualTextXBlock(StudioEditableXBlockMixin, StudioContainerXBlockMix
             i18n_service=self._i18n_service(),
         ))
         fragment.add_css(self.resource_string("css/multilingual_text.css"))
+        fragment.add_css(self.resource_string("css/multilingual_text_author.css"))
         if not errors:
             fragment.add_javascript(self.resource_string("js/src/multilingual_text_author.js"))
             fragment.initialize_js("MultilingualTextAuthorXBlock")
