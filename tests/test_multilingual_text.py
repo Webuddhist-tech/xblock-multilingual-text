@@ -149,7 +149,7 @@ def test_student_view_uses_catalog_order_and_excludes_unavailable_translations()
     rendered = block.student_view({}).to_dict()
     content = rendered["content"]
 
-    assert content.index('value="bo"') < content.index('value="en"')
+    assert content.index('data-language-option="bo"') < content.index('data-language-option="en"')
     assert "བོད་ཡིག content" in content
     assert "English content" in content
     assert "Must not render" not in content
@@ -158,6 +158,9 @@ def test_student_view_uses_catalog_order_and_excludes_unavailable_translations()
     assert 'data-language="bo"' in content
     assert 'lang="bo"' in content
     assert 'dir="auto"' in content
+    assert 'role="listbox"' in content
+    assert 'aria-haspopup="listbox"' in content
+    assert 'aria-selected="true"' in content
     assert any(resource["data"] == ".native-text-child { color: green; }" for resource in rendered["resources"])
 
 
@@ -171,7 +174,7 @@ def test_student_view_shows_unavailable_message_when_all_translations_are_empty(
     content = block.student_view({}).content
 
     assert "This content is not available in any language." in content
-    assert "<select" not in content
+    assert "multilingual-text__dropdown" not in content
 
 
 def test_translation_status_preserves_inactive_and_finds_stale_mappings():

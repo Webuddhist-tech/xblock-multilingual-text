@@ -4,29 +4,194 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.5rem;
-    margin: 1rem 0 1rem -1rem;
+    margin: 0 0 1rem 0;
     width: 100%;
 }
 
-.multilingual-text__control label {
+.multilingual-text__label {
+    color: #76543d;
+    font-size: 15px;
     font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1.25;
     margin-bottom: 0;
+    text-transform: uppercase;
 }
 
 .multilingual-text-author strong {
     font-weight: 600;
 }
 
-.multilingual-text__select {
-    border: 1px solid #c2c7cc;
-    border-radius: 4px;
+.multilingual-text__dropdown {
     max-width: 100%;
-    min-width: 10rem;
-    padding: 0.35rem 0.65rem;
+    position: relative;
+    width: 14rem;
+}
+
+.multilingual-text__trigger {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #c99a72;
+    border-radius: 0.65rem;
+    box-sizing: border-box;
+    color: #161616;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    transition: border-color 150ms ease-out, background 150ms ease-out, color 150ms ease-out;
+    width: 100%;
+}
+
+.multilingual-text__trigger:hover {
+    border-color: #8c654b;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.multilingual-text__trigger:active:not(:disabled),
+.multilingual-text__trigger:focus:not(:disabled) {
+    border-color: #8c654b !important;
+    box-shadow: none !important;
+}
+
+.multilingual-text__trigger:focus-visible {
+    outline: 2px solid #0b5aa2;
+    outline-offset: 2px;
+}
+
+.multilingual-text__chevron {
+    border-bottom: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    flex: 0 0 auto;
+    height: 0.5rem;
+    margin: -0.25rem 0.15rem 0 1rem;
+    transform: rotate(45deg);
+    transition: transform 150ms ease;
+    width: 0.5rem;
+}
+
+.multilingual-text__trigger[aria-expanded="true"] .multilingual-text__chevron {
+    margin-top: 0.25rem;
+    transform: rotate(225deg);
+}
+
+.multilingual-text__options {
+    background: #fff;
+    border: 1px solid #dfc6ac;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 12%);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    left: 0;
+    margin-top: 0.45rem;
+    padding: 0.45rem;
+    position: absolute;
+    right: 0;
+    z-index: 10;
+}
+
+.multilingual-text__options[hidden] {
+    display: none !important;
+}
+
+.multilingual-text__option {
+    background: transparent;
+    border: 0;
+    border-radius: 0.6rem;
+    color: #5b2f1b;
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    margin: 0;
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+    transition: background 150ms ease-out, color 150ms ease-out;
+    width: 100%;
+}
+
+.multilingual-text__option:hover,
+.multilingual-text__option:focus-visible,
+.multilingual-text__option--selected {
+    background: #efe3c9;
+    color: #161616;
+}
+
+.multilingual-text__option--selected {
+    font-weight: 600;
+}
+
+.multilingual-text__option:hover:not(:disabled){
+    background-color: #efe3c9 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+.multilingual-text__option:active:not(:disabled) {
+    background: #e0d0b0 !important;
+}
+
+.multilingual-text__option:active:not(:disabled),
+.multilingual-text__option:focus:not(:disabled) {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.multilingual-text__option:focus-visible {
+    outline: 2px solid #0b5aa2;
+    outline-offset: -2px;
 }
 
 .multilingual-text__content[hidden] {
     display: none !important;
+}
+
+@media (max-width: 768px) {
+    .multilingual-text__control {
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .multilingual-text__label {
+        font-size: 12px;
+        letter-spacing: 0.1em;
+    }
+
+    .multilingual-text__dropdown {
+        width: 11rem;
+    }
+
+    .multilingual-text__trigger {
+        border-radius: 0.5rem;
+        font-size: 14px;
+        padding: 0.4rem 0.7rem;
+    }
+
+    .multilingual-text__chevron {
+        height: 0.4rem;
+        margin: -0.2rem 0.1rem 0 0.5rem;
+        width: 0.4rem;
+    }
+
+    .multilingual-text__trigger[aria-expanded="true"] .multilingual-text__chevron {
+        margin-top: 0.2rem;
+    }
+
+    .multilingual-text__options {
+        border-radius: 0.6rem;
+        gap: 0.25rem;
+        padding: 0.35rem;
+    }
+
+    .multilingual-text__option {
+        border-radius: 0.45rem;
+        font-size: 14px;
+        padding: 0.45rem 0.65rem;
+    }
 }
 
 .multilingual-text__unavailable,

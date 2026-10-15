@@ -6,12 +6,42 @@
 >
   {% if translations %}
     <div class="multilingual-text__control">
-      <label for="{{ element_id }}-language">{% trans "Language" %}</label>
-      <select id="{{ element_id }}-language" class="multilingual-text__select">
-        {% for translation in translations %}
-          <option value="{{ translation.code }}">{{ translation.label }}</option>
-        {% endfor %}
-      </select>
+      <span id="{{ element_id }}-language-label" class="multilingual-text__label">
+        {% trans "Language" %}:
+      </span>
+      <div class="multilingual-text__dropdown">
+        <button
+          type="button"
+          class="multilingual-text__trigger"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-labelledby="{{ element_id }}-language-label {{ element_id }}-language-value"
+          aria-controls="{{ element_id }}-language-options"
+        >
+          <span id="{{ element_id }}-language-value" class="multilingual-text__value">
+            {{ translations.0.label }}
+          </span>
+          <span class="multilingual-text__chevron" aria-hidden="true"></span>
+        </button>
+        <div
+          id="{{ element_id }}-language-options"
+          class="multilingual-text__options"
+          role="listbox"
+          aria-labelledby="{{ element_id }}-language-label"
+          hidden
+        >
+          {% for translation in translations %}
+            <button
+              type="button"
+              class="multilingual-text__option{% if forloop.first %} multilingual-text__option--selected{% endif %}"
+              role="option"
+              data-language-option="{{ translation.code }}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              tabindex="-1"
+            >{{ translation.label }}</button>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
     <div class="multilingual-text__contents">
