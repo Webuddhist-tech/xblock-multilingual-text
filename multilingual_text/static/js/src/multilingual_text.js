@@ -57,9 +57,21 @@ function MultilingualTextXBlock(runtime, element) { // eslint-disable-line no-un
         return selected;
     }
 
+    function releaseSpace() {
+        block.style.paddingBottom = '';
+    }
+
+    // The open list floats, so it does not make the page taller. When it hangs
+    // past the block, add just enough padding for the page to include it.
+    function reserveSpace() {
+        var overflow = listbox.getBoundingClientRect().bottom - block.getBoundingClientRect().bottom;
+        block.style.paddingBottom = overflow > 1 ? Math.ceil(overflow) + 'px' : '';
+    }
+
     function closeDropdown(returnFocus) {
         listbox.hidden = true;
         trigger.setAttribute('aria-expanded', 'false');
+        releaseSpace();
         if (returnFocus) {
             trigger.focus();
         }
@@ -68,6 +80,7 @@ function MultilingualTextXBlock(runtime, element) { // eslint-disable-line no-un
     function openDropdown() {
         listbox.hidden = false;
         trigger.setAttribute('aria-expanded', 'true');
+        reserveSpace();
         (options.find(function (option) {
             return option.getAttribute('aria-selected') === 'true';
         }) || options[0]).focus();

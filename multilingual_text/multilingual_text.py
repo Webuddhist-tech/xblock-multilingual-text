@@ -45,6 +45,7 @@ class MultilingualTextXBlock(StudioEditableXBlockMixin, StudioContainerXBlockMix
 
     has_children = True
     has_score = False
+    student_view_multi_device = True
 
     display_name = String(
         display_name=_("Display Name"),
